@@ -22,7 +22,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
 
-    =
+    
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
     else:
@@ -39,4 +39,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    from . import db
+    db.init_app(app)
+
     return app
+
