@@ -25,3 +25,11 @@ from flask import render_template
 @app.route("/home")
 def home():
     return render_template("index.html", name="Flask")
+
+from flask import request
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        return f"Usuário: {request.form['username']}"
+    return "Envie um formulário"
