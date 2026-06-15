@@ -19,3 +19,9 @@ from markupsafe import escape
 @app.route("/escape/<text>")
 def escape_text(text):
     return escape(text)
+
+from flask import render_template
+
+@app.route("/home")
+def home():
+    return render_template("index.html", name="Flask")
