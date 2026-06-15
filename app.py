@@ -1,54 +1,34 @@
-from flask import Flask
+from flask import Flask, url_for, render_template, request
+from markupsafe import escape
 
 app = Flask(__name__)
 
 @app.route("/")
-def index():
-    return "Hello, Flask!"
+def hello_world():
+    return "<p>Hello, World!</p>"
 
-@app.route("/hello")
-def hello():
-    return "Olá, mundo!"
+@app.route("/about")
+def about():
+    return "Página sobre"
 
 @app.route("/user/<name>")
 def user(name):
-    return f"Usuário: {name}"
+    return f"Olá {name}"
 
-from markupsafe import escape
+@app.route("/escape/<name>")
+def escape_name(name):
+    return f"Olá {escape(name)}"
 
-@app.route("/escape/<text>")
-def escape_text(text):
-    return escape(text)
-
-from flask import render_template
+@app.route("/static-test")
+def static_test():
+    return url_for("static", filename="style.css")
 
 @app.route("/home")
 def home():
-    return render_template("index.html", name="Flask")
-
-from flask import request
+    return render_template("index.html", name="Vitória")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        return f"Usuário: {request.form['username']}"
-    return "Envie um formulário"
-
-from flask import redirect, abort, url_for
-
-@app.route("/go")
-def go():
-    return redirect(url_for("hello"))
-
-@app.route("/erro")
-def erro():
-    abort(404)
-
-from flask import session
-
-app.secret_key = "chave-secreta"
-
-@app.route("/set")
-def set_session():
-    session["user"] = "FlaskUser"
-    return "Sessão criada"
+        return f"Usuário {request.form['username']}"
+    return "Envie um POST"
