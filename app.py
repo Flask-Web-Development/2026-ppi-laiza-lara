@@ -33,3 +33,13 @@ def login():
     if request.method == "POST":
         return f"Usuário: {request.form['username']}"
     return "Envie um formulário"
+
+from flask import redirect, abort, url_for
+
+@app.route("/go")
+def go():
+    return redirect(url_for("hello"))
+
+@app.route("/erro")
+def erro():
+    abort(404)
