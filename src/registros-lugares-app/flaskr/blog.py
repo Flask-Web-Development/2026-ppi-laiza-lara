@@ -12,13 +12,14 @@ bp = Blueprint('blog', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    lugar = db.execute(
+
+    lugares = db.execute(
         'SELECT l.id, nome, descricao, data_visita, author_id, username'
         ' FROM lugar l JOIN user u ON l.author_id = u.id'
         ' ORDER BY data_visita DESC'
     ).fetchall()
 
-    return render_template('blog/index.html', lugar=lugar)
+    return render_template('blog/index.html', lugares=lugares)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -37,11 +38,13 @@ def create():
             flash(error)
         else:
             db = get_db()
+
             db.execute(
                 'INSERT INTO lugar (nome, descricao, data_visita, author_id)'
                 ' VALUES (?, ?, ?, ?)',
                 (nome, descricao, data_visita, g.user['id'])
             )
+
             db.commit()
 
             return redirect(url_for('blog.index'))
@@ -82,13 +85,16 @@ def update(id):
 
         if error is not None:
             flash(error)
+
         else:
             db = get_db()
+
             db.execute(
                 'UPDATE lugar SET nome = ?, descricao = ?, data_visita = ?'
                 ' WHERE id = ?',
                 (nome, descricao, data_visita, id)
             )
+
             db.commit()
 
             return redirect(url_for('blog.index'))
@@ -100,7 +106,14 @@ def update(id):
 @login_required
 def delete(id):
     get_lugar(id)
+
     db = get_db()
-    db.execute('DELETE FROM lugar WHERE id = ?', (id,))
+
+    db.execute(
+        'DELETE FROM lugar WHERE id = ?',
+        (id,)
+    )
+
     db.commit()
+
     return redirect(url_for('blog.index'))
